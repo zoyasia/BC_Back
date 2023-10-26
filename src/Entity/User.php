@@ -52,6 +52,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $zipcode = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
     #[ORM\OneToMany(mappedBy: 'employee', targetEntity: Order::class)]
     private Collection $orders;
 
@@ -228,6 +231,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $order->setEmployee(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
 
         return $this;
     }

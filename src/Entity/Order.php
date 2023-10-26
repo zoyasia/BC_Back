@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,14 @@ class Order
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
     private ?User $customer = null;
+
+    #[ORM\OneToMany(mappedBy: 'orders', targetEntity: Selection::class)]
+    private Collection $selection;
+
+    public function __construct()
+    {
+        $this->selection = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,4 +134,35 @@ class Order
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Selection>
+     */
+    public function getSelection(): Collection
+    {
+        return $this->selection;
+    }
+
+    public function addSelection(Selection $selection): static
+    {
+        if (!$this->selection->contains($selection)) {
+            $this->selection->add($selection);
+            $selection->setOrders($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSelection(Selection $selection): static
+    {
+        if ($this->selection->removeElement($selection)) {
+            // set the owning side to null (unless already changed)
+            if ($selection->getOrders() === $this) {
+                $selection->setOrders(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
