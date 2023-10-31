@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
+use App\Entity\Service;
+use App\Entity\Article;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
@@ -12,6 +14,9 @@ class AppFixtures extends Fixture
 
     private const NB_CUSTOMERS = 20;
     private const NB_EMPLOYEES = 3;
+    private const SERVICE_LIST = ["Lavage & Repassage", "Nettoyage à sec", "Soins", "Ameublement"];
+
+    private const ARTICLE_LIST = ["Haut", "Bas", "Ensemble", "Extérieur", "Ameublement"];
 
     public function __construct(private UserPasswordHasherInterface $hasher) // injection du service de hachage de mot de passe avec l'interface PasswordHasher
     {
@@ -60,6 +65,26 @@ class AppFixtures extends Fixture
             ->setBirthdate($faker->dateTimeBetween('-80 years','-18 years'));
             
             $manager->persist($customerUser);
+            }
+
+            // DONNEES TEST PRESTATIONS PRESSING
+        $services = [];
+        
+            foreach (self::SERVICE_LIST as $serviceName) {
+                $service = new Service;
+                $service->setName($serviceName);
+                $manager->persist($service);
+                $services[] = $service;
+            }
+
+            // DONNEES TEST ARTICLES PRESSING
+            $articles = [];
+        
+            foreach (self::ARTICLE_LIST as $articleName) {
+                $article = new Article;
+                $article->setName($articleName);
+                $manager->persist($article);
+                $articles[] = $article;
             }
 
 
