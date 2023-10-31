@@ -10,7 +10,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AppFixtures extends Fixture
 {
 
-    private const NB_CLIENTS = 20;
+    private const NB_CUSTOMERS = 20;
+    private const NB_EMPLOYEES = 3;
 
     public function __construct(private UserPasswordHasherInterface $hasher) // injection du service de hachage de mot de passe avec l'interface PasswordHasher
     {
@@ -30,8 +31,22 @@ class AppFixtures extends Fixture
 
         $manager->persist($adminUser);
 
+        // DONNEES TEST EMPLOYES
+        for ($i = 0; $i < self::NB_EMPLOYEES; $i++) {
+            $employeeUser = new User();
+            $employeeUser
+            ->setEmail($faker->email())
+            ->setPassword($this->hasher->hashPassword($employeeUser, 'testEmp'))
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
+            ->setRoles(['ROLE_EMPLOYEE'])
+            ->setBirthdate($faker->dateTimeBetween('-60 years','-18 years'));
+            
+            $manager->persist($employeeUser);
+            }
+
         // DONNEES TEST CLIENTS
-        for ($i = 0; $i < self::NB_CLIENTS; $i++) {
+        for ($i = 0; $i < self::NB_CUSTOMERS; $i++) {
             $customerUser = new User();
             $customerUser
             ->setEmail($faker->email())
@@ -46,6 +61,8 @@ class AppFixtures extends Fixture
             
             $manager->persist($customerUser);
             }
+
+
 
 
 
