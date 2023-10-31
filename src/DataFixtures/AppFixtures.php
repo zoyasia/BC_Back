@@ -7,15 +7,15 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\User;
 use App\Entity\Service;
 use App\Entity\Category;
+use App\Entity\Article;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-
     private const NB_CUSTOMERS = 20;
     private const NB_EMPLOYEES = 3;
+    private const NB_ARTICLES = 40;
     private const SERVICE_LIST = ["Lavage & Repassage", "Nettoyage à sec", "Soins", "Ameublement"];
-
     private const ARTICLE_CATEGORY_LIST = ["Haut", "Bas", "Ensemble", "Extérieur", "Ameublement"];
 
     public function __construct(private UserPasswordHasherInterface $hasher) // injection du service de hachage de mot de passe avec l'interface PasswordHasher
@@ -72,9 +72,10 @@ class AppFixtures extends Fixture
         
             foreach (self::SERVICE_LIST as $serviceName) {
                 $service = new Service;
-                $service->setName($serviceName);
-                $service->setDescription($faker->paragraph(2));
-                $service->setPrice($faker->randomFloat(1, 2, 5));
+                $service
+                ->setName($serviceName)
+                ->setDescription($faker->paragraph(2))
+                ->setPrice($faker->randomFloat(1, 2, 5));
                 $manager->persist($service);
                 $services[] = $service;
             }
@@ -90,7 +91,17 @@ class AppFixtures extends Fixture
             }
 
 
-
+            // DONNEES TEST ARTICLES
+            for ($i = 0; $i < self::NB_ARTICLES; $i++) {
+                $article = new Article();
+                $article
+                ->setName($faker->word())
+                ->setDescription($faker->paragraph(2))
+                ->setPrice($faker->randomFloat(1, 2, 5))
+                ->setCategory($faker->randomElement($articleCategories));
+                
+                $manager->persist($article);
+                }
 
 
         $manager->flush();
