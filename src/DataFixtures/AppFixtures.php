@@ -73,6 +73,8 @@ class AppFixtures extends Fixture
             foreach (self::SERVICE_LIST as $serviceName) {
                 $service = new Service;
                 $service->setName($serviceName);
+                $service->setDescription($faker->paragraph(2));
+                $service->setPrice($faker->randomFloat(1, 2, 5));
                 $manager->persist($service);
                 $services[] = $service;
             }
@@ -83,6 +85,8 @@ class AppFixtures extends Fixture
             foreach (self::ARTICLE_LIST as $articleName) {
                 $article = new Article;
                 $article->setName($articleName);
+                $article->setDescription($faker->paragraph(2));
+                $article->setPrice($faker->randomFloat(1, 2, 5));
                 $manager->persist($article);
                 $articles[] = $article;
             }
