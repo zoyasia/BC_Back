@@ -14,7 +14,7 @@ class AppFixtures extends Fixture
 {
     private const NB_CUSTOMERS = 20;
     private const NB_EMPLOYEES = 3;
-    private const NB_ARTICLES = 40;
+    private const NB_ARTICLES = 10;
     private const SERVICE_LIST = ["Lavage & Repassage", "Nettoyage à sec", "Soins", "Ameublement"];
     private const ARTICLE_CATEGORY_LIST = ["Haut", "Bas", "Ensemble", "Extérieur", "Ameublement"];
 
