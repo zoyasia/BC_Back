@@ -7,32 +7,39 @@ use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext:['groups'=>['articles:read']])] // quand api platform veut normaliser un article, je veux qu'il aille piocher dans le groupe articles:read
 class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["articles:read", "categories:read"])] // j'inclus la propriété id à mon groupe de sérialisation articles:read
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["articles:read", "categories:read"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["articles:read"])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["articles:read"])]
     private ?string $state = null;
 
     #[ORM\Column]
+    #[Groups(["articles:read", "categories:read"])]
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Selection::class)]
     private Collection $selections;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[Groups(["articles:read"])]
     private ?Category $category = null;
 
     public function __construct()
