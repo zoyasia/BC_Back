@@ -7,20 +7,24 @@ use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
-#[ApiResource]
+#[ApiResource(normalizationContext:['groups'=>['services:read']])] 
 class Service
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['services:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['services:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['services:read'])]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -29,9 +33,14 @@ class Service
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Selection::class)]
     private Collection $selections;
 
+    #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: 'services')]
+    #[Groups(['services:read'])]
+    private Collection $articles;
+
     public function __construct()
     {
         $this->selections = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +109,33 @@ class Service
             if ($selection->getService() === $this) {
                 $selection->setService(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
+
+    public function addArticle(Article $article): static
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->addService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): static
+    {
+        if ($this->articles->removeElement($article)) {
+            $article->removeService($this);
         }
 
         return $this;

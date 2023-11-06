@@ -30,7 +30,7 @@ class AppFixtures extends Fixture
         $adminUser
         ->setEmail('rh@frimousse.com')
         ->setRoles(['ROLE_ADMIN'])
-        ->setPassword($this->hasher->hashPassword($adminUser, 'admninFrimousse23'))
+        ->setPassword($this->hasher->hashPassword($adminUser, 'adminFrimousse23'))
         ->setFirstname('Laetitia')
         ->setLastname('Guillo');
 
@@ -98,8 +98,10 @@ class AppFixtures extends Fixture
                 ->setName($faker->word())
                 ->setDescription($faker->paragraph(2))
                 ->setPrice($faker->randomFloat(1, 2, 5))
-                ->setCategory($faker->randomElement($articleCategories));
+                ->setCategory($faker->randomElement($articleCategories))
+                ->addService($faker->randomElement($services)); // voir pour articles aussi le unique()->randomelement
                 
+
                 $manager->persist($article);
                 }
 

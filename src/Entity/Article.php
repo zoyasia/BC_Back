@@ -16,11 +16,11 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["articles:read", "categories:read"])] // j'inclus la propriété id à mon groupe de sérialisation articles:read
+    #[Groups(["articles:read", "categories:read", "services:read"])] // j'inclus la propriété id à mon groupe de sérialisation articles:read
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["articles:read", "categories:read"])]
+    #[Groups(["articles:read", "categories:read", "services:read"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -42,9 +42,13 @@ class Article
     #[Groups(["articles:read"])]
     private ?Category $category = null;
 
+    #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'articles')]
+    private Collection $services;
+
     public function __construct()
     {
         $this->selections = new ArrayCollection();
+        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -138,6 +142,30 @@ class Article
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Service>
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): static
+    {
+        if (!$this->services->contains($service)) {
+            $this->services->add($service);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): static
+    {
+        $this->services->removeElement($service);
 
         return $this;
     }
