@@ -10,22 +10,31 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => 'user_read'],
+    operations: [
+        new Post(processor: UserPasswordHasher::class)
+    ]
+)]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user_read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user_read'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user_read'])]
     private array $roles = [];
 
     /**
@@ -33,6 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+    private ?string $plainPassword = null; // je l'ajoute manuellement sans ORM Column car je ne veux pas stocker le mdp en clair dans la BDD 
 
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
@@ -129,8 +139,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // j'efface les données sensibles de l'utilisateur
+        $this->plainPassword = null;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
     }
 
     public function getLastname(): ?string
@@ -246,5 +266,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
+
 }
