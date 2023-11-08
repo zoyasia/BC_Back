@@ -17,6 +17,13 @@ class AppFixtures extends Fixture
     private const NB_ARTICLES = 10;
     private const SERVICE_LIST = ["Lavage & Repassage", "Nettoyage à sec", "Soins", "Ameublement"];
     private const ARTICLE_CATEGORY_LIST = ["Haut", "Bas", "Ensemble", "Extérieur", "Ameublement"];
+    private const HAUTS = ["t-shirt/polo", "chemise", "gilet", "pull"];
+    private const BAS = ["pantalon", "jupe", "short"];
+    private const EXTERIEUR = ["manteau", "veste", "cuir", "doudoune", "imperméable", "trench"];
+    private const AMEUBLEMENT = ["rideaux", "couette", "couverture", "duvet", "oreiller", "drap"];
+    private const ENSEMBLE = ["costume", "robe", "combinaison"];
+
+    // foreach category créer un article relié à cette catégorie
 
     public function __construct(private UserPasswordHasherInterface $hasher) // injection du service de hachage de mot de passe avec l'interface PasswordHasher
     {
@@ -82,28 +89,47 @@ class AppFixtures extends Fixture
 
             // DONNEES TEST CATEGORIES D'ARTICLES PRESSING
             $articleCategories = [];
+
+            $categories = [
+                "HAUTS" => self::HAUTS,
+                "BAS" => self::BAS,
+                "EXTERIEUR" => self::EXTERIEUR,
+                "AMEUBLEMENT" => self::AMEUBLEMENT,
+                "ENSEMBLE" => self::ENSEMBLE
+            ];
         
-            foreach (self::ARTICLE_CATEGORY_LIST as $categoryName) {
+            foreach ($categories as $categoryName => $categoryItems) {
                 $articleCategory = new Category;
                 $articleCategory->setName($categoryName);
                 $manager->persist($articleCategory);
                 $articleCategories[] = $articleCategory;
+            
+                foreach ($categoryItems as $itemName) {
+                    $article = new Article;
+                    $article
+                    ->setName($itemName)
+                    ->setDescription($faker->paragraph(2))
+                    ->setCategory($articleCategory)
+                    ->setPrice($faker->randomFloat(1, 2, 5))
+                    ->addService($faker->randomElement($services));
+                    $manager->persist($article);
+                }
             }
 
 
-            // DONNEES TEST ARTICLES
-            for ($i = 0; $i < self::NB_ARTICLES; $i++) {
-                $article = new Article();
-                $article
-                ->setName($faker->word())
-                ->setDescription($faker->paragraph(2))
-                ->setPrice($faker->randomFloat(1, 2, 5))
-                ->setCategory($faker->randomElement($articleCategories))
-                ->addService($faker->randomElement($services)); // voir pour articles aussi le unique()->randomelement
+            // // V1 (avant imbrication dans les fixtures catégories):DONNEES TEST ARTICLES
+            // for ($i = 0; $i < self::NB_ARTICLES; $i++) {
+            //     $article = new Article();
+            //     $article
+            //     ->setName($faker->word())
+            //     ->setDescription($faker->paragraph(2))
+            //     ->setPrice($faker->randomFloat(1, 2, 5))
+            //     ->setCategory($faker->randomElement($articleCategories))
+            //     ->addService($faker->randomElement($services)); // voir pour articles aussi le unique()->randomelement
                 
 
-                $manager->persist($article);
-                }
+            //     $manager->persist($article);
+            //     }
 
 
         $manager->flush();
