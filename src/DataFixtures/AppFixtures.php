@@ -17,13 +17,11 @@ class AppFixtures extends Fixture
     private const NB_ARTICLES = 10;
     private const SERVICE_LIST = ["Lavage & Repassage", "Nettoyage à sec", "Soins", "Ameublement"];
     private const ARTICLE_CATEGORY_LIST = ["Haut", "Bas", "Ensemble", "Extérieur", "Ameublement"];
-    private const HAUTS = ["t-shirt/polo", "chemise", "gilet", "pull"];
-    private const BAS = ["pantalon", "jupe", "short"];
-    private const EXTERIEUR = ["manteau", "veste", "cuir", "doudoune", "imperméable", "trench"];
-    private const AMEUBLEMENT = ["rideaux", "couette", "couverture", "duvet", "oreiller", "drap"];
-    private const ENSEMBLE = ["costume", "robe", "combinaison"];
-
-    // foreach category créer un article relié à cette catégorie
+    private const HAUTS = ["Tshirt", "Chemise", "Gilet", "Pull"];
+    private const BAS = ["Pantalon", "Jupe", "Short"];
+    private const EXTERIEUR = ["Manteau", "Veste", "Cuir", "Doudoune", "Imperméable", "Trench"];
+    private const AMEUBLEMENT = ["Rideaux", "Couette", "Couverture", "Duvet", "Oreiller", "Drap"];
+    private const ENSEMBLE = ["Costume", "Robe", "Combinaison"];
 
     public function __construct(private UserPasswordHasherInterface $hasher) // injection du service de hachage de mot de passe avec l'interface PasswordHasher
     {
@@ -87,7 +85,8 @@ class AppFixtures extends Fixture
                 $services[] = $service;
             }
 
-            // DONNEES TEST CATEGORIES D'ARTICLES PRESSING
+            // DONNEES TEST POUR PEUPLER LES CATEGORIES + ARTICLES ET LEURS SERVICES ASSOCIES
+
             $articleCategories = [];
 
             $categories = [
@@ -97,6 +96,32 @@ class AppFixtures extends Fixture
                 "AMEUBLEMENT" => self::AMEUBLEMENT,
                 "ENSEMBLE" => self::ENSEMBLE
             ];
+
+            $articleServiceMapping = [
+                "Tshirt" => ["Lavage & Repassage"],
+                "Chemise" => ["Lavage & Repassage", "Nettoyage à sec", "Soins"],
+                "Pantalon" => ["Lavage & Repassage", "Nettoyage à sec"],
+                "Gilet" => ["Nettoyage à sec"], 
+                "Pull" => ["Nettoyage à sec"],
+                "Jupe" => ["Lavage & Repassage", "Nettoyage à sec"], 
+                "Short" => ["Lavage & Repassage"],
+                "Manteau" => ["Nettoyage à sec", "Soins"], 
+                "Veste" => ["Nettoyage à sec", "Soins"], 
+                "Cuir" => ["Nettoyage à sec", "Soins"], 
+                "Doudoune" => ["Nettoyage à sec"], 
+                "Imperméable" => ["Nettoyage à sec", "Soins"], 
+                "Trench" => ["Nettoyage à sec", "Soins"],
+                "Rideaux" => ["Lavage & Repassage"], 
+                "Couette" => ["Nettoyage à sec", "Soins", "Ameublement"], 
+                "Couverture" => ["Nettoyage à sec", "Soins", "Ameublement"], 
+                "Duvet" => ["Nettoyage à sec", "Soins", "Ameublement"], 
+                "Oreiller" => ["Nettoyage à sec", "Soins", "Ameublement"], 
+                "Drap" => ["Lavage & Repassage", "Soins", "Ameublement"],
+                "Costume" => ["Nettoyage à sec"], 
+                "Robe" => ["Lavage & Repassage", "Nettoyage à sec"], 
+                "Combinaison" => ["Lavage & Repassage", "Nettoyage à sec"]
+            ];
+            
         
             foreach ($categories as $categoryName => $categoryItems) {
                 $articleCategory = new Category;
@@ -110,8 +135,14 @@ class AppFixtures extends Fixture
                     ->setName($itemName)
                     ->setDescription($faker->paragraph(2))
                     ->setCategory($articleCategory)
-                    ->setPrice($faker->randomFloat(1, 2, 5))
-                    ->addService($faker->randomElement($services));
+                    ->setPrice($faker->randomFloat(1, 2, 5));
+
+                    $servicesToAdd = $articleServiceMapping[$itemName];
+                    foreach ($servicesToAdd as $serviceName) {
+                        $service = $services[array_search($serviceName, self::SERVICE_LIST)];
+                        $article->addService($service);
+                    }
+
                     $manager->persist($article);
                 }
             }
