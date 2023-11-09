@@ -16,11 +16,11 @@ class Service
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['services:read'])]
+    #[Groups(['services:read', 'selections:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['services:read'])]
+    #[Groups(['services:read', 'selections:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
@@ -28,6 +28,7 @@ class Service
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['services:read','selections:read'])]
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'service', targetEntity: Selection::class)]
