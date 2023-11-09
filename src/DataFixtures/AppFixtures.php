@@ -133,7 +133,7 @@ class AppFixtures extends Fixture
                     $article = new Article;
                     $article
                     ->setName($itemName)
-                    ->setDescription($faker->paragraph(2))
+                    ->setDescription($faker->sentence(6))
                     ->setCategory($articleCategory)
                     ->setPrice($faker->randomFloat(1, 2, 5));
 

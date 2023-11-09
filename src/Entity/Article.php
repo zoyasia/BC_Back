@@ -24,7 +24,7 @@ class Article
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["articles:read"])]
+    #[Groups(["articles:read", "services:read"])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -32,7 +32,7 @@ class Article
     private ?string $state = null;
 
     #[ORM\Column]
-    #[Groups(["articles:read", "categories:read"])]
+    #[Groups(["articles:read", "categories:read", "services:read"])]
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Selection::class)]
