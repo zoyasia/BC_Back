@@ -85,9 +85,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'employee', targetEntity: Order::class)]
     private Collection $orders;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Selection::class)]
+    private Collection $selections;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->selections = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -283,5 +287,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Selection>
+     */
+    public function getSelections(): Collection
+    {
+        return $this->selections;
+    }
+
+    public function addSelection(Selection $selection): static
+    {
+        if (!$this->selections->contains($selection)) {
+            $this->selections->add($selection);
+            $selection->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSelection(Selection $selection): static
+    {
+        if ($this->selections->removeElement($selection)) {
+            // set the owning side to null (unless already changed)
+            if ($selection->getUser() === $this) {
+                $selection->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 
 }

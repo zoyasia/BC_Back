@@ -30,6 +30,10 @@ class Selection
     #[ORM\ManyToOne(inversedBy: 'selection')]
     private ?Order $orders = null;
 
+    #[ORM\ManyToOne(inversedBy: 'selections')]
+    private ?User $user = null;
+
+
 
     public function getId(): ?int
     {
@@ -92,6 +96,18 @@ class Selection
     public function setOrders(?Order $orders): static
     {
         $this->orders = $orders;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
