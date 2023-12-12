@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:post', 'user:read'])]
+    #[Groups(['user:post', 'user:read', 'selection:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -318,11 +318,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // public function getUserIdentification(): string
-    // {
-    //     // Return the value of the user_identify_field, which is 'id' in this case
-    //     return (string) $this->getId();
-    // }
+    public function getUserIdentification(): string
+    {
+        // Return the value of the user_identify_field, which is 'id' in this case
+        return (string) $this->getId();
+    }
 
 
 }
