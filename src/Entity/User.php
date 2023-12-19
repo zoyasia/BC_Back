@@ -20,18 +20,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    normalizationContext: ['groups' => 'user:read'],
-    denormalizationContext:['groups' => 'user:post', 'user:update'],
-    operations: [
-        new Get(),
-        new Post(processor: \App\State\UserPasswordHasher::class),
-        new GetCollection(),
-        new Put(processor: UserPasswordHasher::class),
-        new Patch(processor: UserPasswordHasher::class),
-        new Delete(),
-    ]
-)]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
