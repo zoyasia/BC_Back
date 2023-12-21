@@ -147,22 +147,6 @@ class AppFixtures extends Fixture
                 }
             }
 
-
-            // // V1 (avant imbrication dans les fixtures catégories):DONNEES TEST ARTICLES
-            // for ($i = 0; $i < self::NB_ARTICLES; $i++) {
-            //     $article = new Article();
-            //     $article
-            //     ->setName($faker->word())
-            //     ->setDescription($faker->paragraph(2))
-            //     ->setPrice($faker->randomFloat(1, 2, 5))
-            //     ->setCategory($faker->randomElement($articleCategories))
-            //     ->addService($faker->randomElement($services)); // voir pour articles aussi le unique()->randomelement
-                
-
-            //     $manager->persist($article);
-            //     }
-
-
         $manager->flush();
     }
 }

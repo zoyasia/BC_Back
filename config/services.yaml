@@ -26,3 +26,8 @@ services:
     App\State\UserPasswordHasher:
         arguments:
             $passwordHasher: '@security.user_password_hasher'
+    
+
+    App\Controller\LoginController:
+        arguments:
+            $jwtManager: '@lexik_jwt_authentication.jwt_manager'

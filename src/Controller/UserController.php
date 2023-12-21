@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,16 +41,12 @@ class UserController extends AbstractController
         return $this->json(['user' => $user], Response::HTTP_CREATED);
     }
 
+    #[Route('/users/{id}', name: 'app_update', methods: ['PATCH'])]
+    public function updateUser(User $task, Request $request): JsonResponse
+    {
+        $this->userManager->update($task, $request->toArray());
+        return new JsonResponse($task, Response::HTTP_OK);
+    }
+
 
 }
-
-
-// $user = $this->userManager->create(
-//     $data['firstname'],
-//     $data['lastname'],
-//     $data['birthdate'],
-//     $data['gender'] ?? 'non renseigné',
-//     $data['address'] ?? 'non renseigné',
-//     $data['zipcode'] ?? 'non renseigné',
-//     $data['city'] ?? 'non renseigné',
-// );

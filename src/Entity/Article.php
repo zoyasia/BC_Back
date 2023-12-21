@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
-#[ApiResource(normalizationContext:['groups'=>['articles:read']])] // quand api platform veut normaliser un article, je veux qu'il aille piocher dans le groupe articles:read
 class Article
 {
     #[ORM\Id]
@@ -139,6 +137,7 @@ class Article
         return $this->category;
     }
 
+    #[Groups(["articles:read"])]
     public function setCategory(?Category $category): static
     {
         $this->category = $category;

@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Factory\UserFactory;
-use Symfony\Component\HttpFoundation\Request;
+
 
 class UserManager
 {
@@ -16,11 +16,10 @@ class UserManager
 
 
     public function __construct(
-        UserRepository $userRepository, 
+        UserRepository $userRepository,
         EntityManagerInterface $entityManager,
         UserFactory $userFactory
-        )
-    {
+    ) {
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
         $this->userFactory = $userFactory;
@@ -50,55 +49,56 @@ class UserManager
     }
 
 
-    // public function create(string $firstname, string $lastname, string $email, string $password, string $gender, string $address, int $zipcode, string $city): User
+    public function update(User $user, array $data): void
+    {
+        if (!empty($data['firstname']) && $data['firstname'] !== $user->getFirstname()) {
+            $user->setFirstname($data['firstname']);
+        }
+
+        if (!empty($data['lastname']) && $data['lastname'] !== $user->getLastname()) {
+            $user->setLastname($data['lastname']);
+        }
+
+        if (!empty($data['email']) && $data['email'] !== $user->getEmail()) {
+            $user->setEmail($data['email']);
+        }
+
+        if (!empty($data['gender']) && $data['gender'] !== $user->getGender()) {
+            $user->setGender($data['gender']);
+        }
+
+        if (!empty($data['birthdate']) && $data['birthdate'] !== $user->getBirthdate()) {
+            $user->setBirthdate($data['birthdate']);
+        }
+
+        if (!empty($data['address']) && $data['address'] !== $user->getAddress()) {
+            $user->setAddress($data['address']);
+        }
+
+        if (!empty($data['zipcode']) && $data['zipcode'] !== $user->getZipcode()) {
+            $user->setZipcode($data['zipcode']);
+        }
+
+        if (!empty($data['city']) && $data['city'] !== $user->getCity()) {
+            $user->setCity($data['city']);
+        }
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    // public function delete($userId): User
     // {
 
-    //     $user = $this->userFactory->createUser($firstname, $lastname, $email, $password, $gender, $address, $zipcode, $city);
+    //     $user = $this->userRepository->find($userId);
 
-    //     $this->entityManager->persist($user);
-    //     $this->entityManager->flush();
-
-    //     return $user;
-    // }
-
-    // public function update(User $task, array $data): void
-    // {
-    //     if (!empty($data['title']) && $data['title'] !== $task->getTitle()) {
-    //         $task->setTitle($data['title']);
-    //     }
-
-    //     if (!empty($data['description']) && $data['description'] !== $task->getDescription()) {
-    //         $task->setDescription($data['description']);
-    //     }
-
-    //     if (!empty($data['deadline']) && $data['deadline'] !== $task->getDeadline()) {
-    //         $task->setDeadline($data['deadline']);
-    //     }
-
-    //     if (!empty($data['status']) && $data['status'] !== $task->getStatus()) {
-    //         $task->setStatus($data['status']);
-    //     }
-
-    //     if ($data['status'] !== $task->isIsCompleted()) {
-    //         $task->setIsCompleted($data['isCompleted']);
-    //     }
-
-    //     $this->entityManager->persist($task);
-    //     $this->entityManager->flush();
-    // }
-
-    // public function delete($taskId): User
-    // {
-
-    //     $task = $this->userRepository->find($taskId);
-
-    //     if (!$task) {
+    //     if (!$user) {
     //         throw new \Doctrine\ORM\EntityNotFoundException('Tâche non trouvée');
     //     }
 
-    //     $this->entityManager->remove($task);
+    //     $this->entityManager->remove($user);
     //     $this->entityManager->flush();
 
-    //     return $task;
+    //     return $user;
     // }
 }

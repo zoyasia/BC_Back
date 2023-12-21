@@ -1,4 +1,6 @@
 {
+    "name": "pressing/back",
+    "description": "API pressing Frimousse",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -19,6 +21,7 @@
         "symfony/dotenv": "6.3.*",
         "symfony/expression-language": "6.3.*",
         "symfony/flex": "^2",
+        "symfony/form": "6.3.*",
         "symfony/framework-bundle": "6.3.*",
         "symfony/property-access": "6.3.*",
         "symfony/property-info": "6.3.*",
