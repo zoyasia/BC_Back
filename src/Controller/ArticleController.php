@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
-
     #[Route('/articles', name: 'app_articles', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository): JsonResponse
     {
