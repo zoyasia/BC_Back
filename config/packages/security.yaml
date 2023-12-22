@@ -14,7 +14,7 @@ security:
             pattern: ^/api/login
             stateless: true
             json_login:
-                check_path: /api/login
+                check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
@@ -27,9 +27,9 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: app_user_provider
+        # main:
+        #     lazy: true
+        #     provider: app_user_provider
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -43,6 +43,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/employee, roles: ROLE_EMPLOYEE }
+        - { path: ^/my-account, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

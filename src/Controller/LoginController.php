@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 // class LoginController extends AbstractController
 // {
@@ -38,24 +39,6 @@ class LoginController extends AbstractController
     {
         $this->jwtManager = $jwtManager;
         $this->security = $security;
-    }
-
-    #[Route(path:'/login', name: 'app_login')]
-    public function login(Request $request): JsonResponse
-    {
-        $user = $this->getUser();
-        $data = json_decode($request->getContent(), true);
-
-
-        var_dump($user);
-
-        if (!$user instanceof User) {
-            throw new AuthenticationException('Invalid credentials.');
-        }
-
-        $token = $this->jwtManager->create($user);
-
-        return new JsonResponse(['token' => $token]);
     }
 
 }
