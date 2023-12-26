@@ -6,3 +6,7 @@ controllers:
 api_login_check:
     path: /api/login_check
     methods: [POST]
+app_update:
+    path: '/users/{id}'
+    controller: 'App\Controller\UserController::updateUser'
+    methods: ['PATCH']
