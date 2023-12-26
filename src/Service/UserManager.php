@@ -37,6 +37,12 @@ class UserManager
         return $usersArray;
     }
 
+    public function getUserById(int $userId): User 
+    {
+        $user = $this->userRepository->findOneBy(['id' => $userId]);
+        return $user;
+    }
+
     public function create(string $firstname, string $lastname, string $email, string $password): User
     {
 

@@ -42,11 +42,22 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}', name: 'app_update', methods: ['PATCH'])]
-    public function updateUser(User $task, Request $request): JsonResponse
+    public function updateUser(User $user, Request $request): JsonResponse
     {
-        $this->userManager->update($task, $request->toArray());
-        return new JsonResponse($task, Response::HTTP_OK);
+        $this->userManager->update($user, $request->toArray());
+        return new JsonResponse($user, Response::HTTP_OK);
     }
 
+    #[Route('/users/{id}', name: 'app_user', methods: ['GET'])]
+    public function showUser(int $id): JsonResponse
+    {
+        $user = $this->userManager->getUserById($id);
+
+        if ($user) {
+            return $this->json($user);
+        } else {
+            return $this->json(['message' => "L'utilisateur n'a pas été trouvé"], 404);
+        }
+    }
 
 }
