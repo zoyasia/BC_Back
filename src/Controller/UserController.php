@@ -57,8 +57,14 @@ class UserController extends AbstractController
     public function updateUser(User $user, Request $request): JsonResponse
     {
         $this->userManager->update($user, $request->toArray());
-        return new JsonResponse($user, Response::HTTP_OK);
-        // return $this->json($user, 204);
+        return new JsonResponse($user, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/users/{id}', name: 'app_delete', methods: ['DELETE'])]
+    public function deleteUser(int $id): JsonResponse
+    {
+        $this->userManager->delete($id);
+        return new JsonResponse($id, Response::HTTP_NO_CONTENT);
     }
 
 }

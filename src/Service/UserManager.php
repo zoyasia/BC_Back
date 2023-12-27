@@ -93,18 +93,17 @@ class UserManager
         $this->entityManager->flush();
     }
 
-    // public function delete($userId): User
-    // {
+    public function delete($userId): User
+    {
+        $user = $this->userRepository->find($userId);
 
-    //     $user = $this->userRepository->find($userId);
+        if (!$user) {
+            throw new \Doctrine\ORM\EntityNotFoundException('Utilisateur non trouvé');
+        }
 
-    //     if (!$user) {
-    //         throw new \Doctrine\ORM\EntityNotFoundException('Tâche non trouvée');
-    //     }
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
 
-    //     $this->entityManager->remove($user);
-    //     $this->entityManager->flush();
-
-    //     return $user;
-    // }
+        return $user;
+    }
 }
