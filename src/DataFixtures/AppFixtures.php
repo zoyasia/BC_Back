@@ -68,8 +68,8 @@ class AppFixtures extends Fixture
             ->setRoles(['ROLE_USER'])
             ->setAddress($faker->streetAddress())
             ->setZipcode($faker->postcode())
-            // ->setZipcode($faker->randomNumber(5, true))
             ->setCity($faker->city())
+            ->setPhone($faker->phoneNumber())
             ->setBirthdate($birthdate->format('Y-m-d'));
             
             $manager->persist($customerUser);

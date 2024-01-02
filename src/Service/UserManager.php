@@ -77,6 +77,10 @@ class UserManager
             $user->setBirthdate($data['birthdate']);
         }
 
+        if (!empty($data['phone']) && $data['phone'] !== $user->getPhone()) {
+            $user->setPhone($data['phone']);
+        }
+
         if (!empty($data['address']) && $data['address'] !== $user->getAddress()) {
             $user->setAddress($data['address']);
         }
