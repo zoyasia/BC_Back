@@ -57,8 +57,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $zipcode = null;
+    #[ORM\Column(length: 55, nullable: true)]
+    private ?string $zipcode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
@@ -215,12 +215,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getZipcode(): ?int
+    public function getZipcode(): ?string
     {
         return $this->zipcode;
     }
 
-    public function setZipcode(?int $zipcode): static
+    public function setZipcode(?string $zipcode): static
     {
         $this->zipcode = $zipcode;
 

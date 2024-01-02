@@ -66,8 +66,9 @@ class AppFixtures extends Fixture
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setRoles(['ROLE_USER'])
-            ->setAddress($faker->address())
-            ->setZipcode($faker->randomNumber(5, true))
+            ->setAddress($faker->streetAddress())
+            ->setZipcode($faker->postcode())
+            // ->setZipcode($faker->randomNumber(5, true))
             ->setCity($faker->city())
             ->setBirthdate($birthdate->format('Y-m-d'));
             
