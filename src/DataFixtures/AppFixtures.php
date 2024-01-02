@@ -44,13 +44,14 @@ class AppFixtures extends Fixture
         // DONNEES TEST EMPLOYES
         for ($i = 0; $i < self::NB_EMPLOYEES; $i++) {
             $employeeUser = new User();
+            $birthdate = $faker->dateTimeBetween('-60 years', '-18 years');
             $employeeUser
             ->setEmail($faker->email())
             ->setPassword($this->hasher->hashPassword($employeeUser, 'testEmp'))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setRoles(['ROLE_EMPLOYEE'])
-            ->setBirthdate($faker->dateTimeBetween('-60 years','-18 years'));
+            ->setBirthdate($birthdate->format('Y-m-d'));
             
             $manager->persist($employeeUser);
             }
@@ -58,6 +59,7 @@ class AppFixtures extends Fixture
         // DONNEES TEST CLIENTS
         for ($i = 0; $i < self::NB_CUSTOMERS; $i++) {
             $customerUser = new User();
+            $birthdate = $faker->dateTimeBetween('-60 years', '-18 years');
             $customerUser
             ->setEmail($faker->email())
             ->setPassword($this->hasher->hashPassword($customerUser, 'test'))
@@ -67,7 +69,7 @@ class AppFixtures extends Fixture
             ->setAddress($faker->address())
             ->setZipcode($faker->randomNumber(5, true))
             ->setCity($faker->city())
-            ->setBirthdate($faker->dateTimeBetween('-80 years','-18 years'));
+            ->setBirthdate($birthdate->format('Y-m-d'));
             
             $manager->persist($customerUser);
             }
