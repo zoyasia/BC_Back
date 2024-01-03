@@ -6,23 +6,26 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Factory\UserFactory;
-
+use App\State\UserPasswordHasher;
 
 class UserManager
 {
     private UserRepository $userRepository;
     private EntityManagerInterface $entityManager;
     private UserFactory $userFactory;
+    private UserPasswordHasher $passwordHasher;
 
 
     public function __construct(
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
-        UserFactory $userFactory
+        UserFactory $userFactory,
+        UserPasswordHasher $passwordHasher
     ) {
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
         $this->userFactory = $userFactory;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function getAll(): array
@@ -37,7 +40,7 @@ class UserManager
         return $usersArray;
     }
 
-    public function getUserById(int $userId): User 
+    public function getUserById(int $userId): User
     {
         $user = $this->userRepository->findOneBy(['id' => $userId]);
         return $user;
@@ -54,47 +57,64 @@ class UserManager
         return $user;
     }
 
-
-    public function update(User $user, array $data): void
-    {
-        if (!empty($data['firstname']) && $data['firstname'] !== $user->getFirstname()) {
-            $user->setFirstname($data['firstname']);
+    public function update(
+        User $user,
+        ?string $firstname,
+        ?string $lastname,
+        ?string $email,
+        ?string $gender,
+        ?string $birthdate,
+        ?string $phone,
+        ?string $address,
+        ?string $zipcode,
+        ?string $city,
+        ?string $newPassword
+    ): User {
+        if (!empty($firstname) && $firstname !== $user->getFirstname()) {
+            $user->setFirstname($firstname);
         }
 
-        if (!empty($data['lastname']) && $data['lastname'] !== $user->getLastname()) {
-            $user->setLastname($data['lastname']);
+        if (!empty($lastname) && $lastname !== $user->getLastname()) {
+            $user->setLastname($lastname);
         }
 
-        if (!empty($data['email']) && $data['email'] !== $user->getEmail()) {
-            $user->setEmail($data['email']);
+        if (!empty($email) && $email !== $user->getEmail()) {
+            $user->setEmail($email);
         }
 
-        if (!empty($data['gender']) && $data['gender'] !== $user->getGender()) {
-            $user->setGender($data['gender']);
+        if (!empty($gender) && $gender !== $user->getGender()) {
+            $user->setGender($gender);
         }
 
-        if (!empty($data['birthdate']) && $data['birthdate'] !== $user->getBirthdate()) {
-            $user->setBirthdate($data['birthdate']);
+        if (!empty($birthdate) && $birthdate !== $user->getBirthdate()) {
+            $user->setBirthdate($birthdate);
         }
 
-        if (!empty($data['phone']) && $data['phone'] !== $user->getPhone()) {
-            $user->setPhone($data['phone']);
+        if (!empty($phone) && $phone !== $user->getPhone()) {
+            $user->setPhone($phone);
         }
 
-        if (!empty($data['address']) && $data['address'] !== $user->getAddress()) {
-            $user->setAddress($data['address']);
+        if (!empty($address) && $address !== $user->getAddress()) {
+            $user->setAddress($address);
         }
 
-        if (!empty($data['zipcode']) && $data['zipcode'] !== $user->getZipcode()) {
-            $user->setZipcode($data['zipcode']);
+        if (!empty($zipcode) && $zipcode !== $user->getZipcode()) {
+            $user->setZipcode($zipcode);
         }
 
-        if (!empty($data['city']) && $data['city'] !== $user->getCity()) {
-            $user->setCity($data['city']);
+        if (!empty($city) && $city !== $user->getCity()) {
+            $user->setCity($city);
+        }
+
+        if (!empty($newPassword)) {
+            $user->setPlainPassword($newPassword);
+            $this->passwordHasher->hashPassword($user);
         }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        return $user;
     }
 
     public function delete($userId): User
