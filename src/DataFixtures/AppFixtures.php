@@ -47,7 +47,7 @@ class AppFixtures extends Fixture
             $birthdate = $faker->dateTimeBetween('-60 years', '-18 years');
             $employeeUser
             ->setEmail($faker->email())
-            ->setPassword($this->hasher->hashPassword($employeeUser, 'testEmp'))
+            ->setPassword($this->hasher->hashPassword($employeeUser, 'testEmp23'))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setRoles(['ROLE_EMPLOYEE'])
@@ -62,7 +62,7 @@ class AppFixtures extends Fixture
             $birthdate = $faker->dateTimeBetween('-60 years', '-18 years');
             $customerUser
             ->setEmail($faker->email())
-            ->setPassword($this->hasher->hashPassword($customerUser, 'test'))
+            ->setPassword($this->hasher->hashPassword($customerUser, 'Test23'))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setRoles(['ROLE_USER'])
