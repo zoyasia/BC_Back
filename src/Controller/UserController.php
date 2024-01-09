@@ -3,21 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
-    private UserManager $userManager;
-
-    public function __construct(UserManager $userManager)
-    {
-        $this->userManager = $userManager;
-    }
+    public function __construct(private UserManager $userManager, private SerializerInterface $serializer, private UserRepository $userRepository)
+    {}
 
     #[Route('/users', name: 'app_users', methods: ['GET'])]
     public function index(): JsonResponse
@@ -44,13 +43,15 @@ class UserController extends AbstractController
     #[Route('/users/{id}', name: 'app_user', methods: ['GET'])]
     public function showUser(int $id): JsonResponse
     {
-        $user = $this->userManager->getUserById($id);
+        // $user = $this->userManager->getUserById($id);
+        $user = $this->userRepository->findOneBy(['id' => $id]);
 
-        if ($user) {
-            return $this->json($user);
-        } else {
-            return $this->json(['message' => "L'utilisateur n'a pas été trouvé"], 404);
+        if (!$user) {
+            // return new JsonResponse($this->serializer->normalize($user, 'json', ['groups' => ['user:read']]));
+            throw new BadRequestHttpException('Message');
         }
+
+        return $this->json($user, 200, [], ['groups' => ['user:read']]);
     }
 
     #[Route('/users/{id}', name: 'app_update', methods: ['PATCH'])]

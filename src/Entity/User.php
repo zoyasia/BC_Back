@@ -13,7 +13,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -275,32 +274,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Selection>
      */
-    public function getSelections(): Collection
-    {
-        return $this->selections;
-    }
+    // public function getSelections(): Collection
+    // {
+    //     return $this->selections;
+    // }
 
-    public function addSelection(Selection $selection): static
-    {
-        if (!$this->selections->contains($selection)) {
-            $this->selections->add($selection);
-            $selection->setUser($this);
-        }
+    // public function addSelection(Selection $selection): static
+    // {
+    //     if (!$this->selections->contains($selection)) {
+    //         $this->selections->add($selection);
+    //         $selection->setUser($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeSelection(Selection $selection): static
-    {
-        if ($this->selections->removeElement($selection)) {
-            // set the owning side to null (unless already changed)
-            if ($selection->getUser() === $this) {
-                $selection->setUser(null);
-            }
-        }
+    // public function removeSelection(Selection $selection): static
+    // {
+    //     if ($this->selections->removeElement($selection)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($selection->getUser() === $this) {
+    //             $selection->setUser(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getUserIdentification(): string
     {

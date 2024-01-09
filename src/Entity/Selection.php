@@ -2,46 +2,44 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+// use ApiPlatform\Metadata\ApiResource;
 use App\Repository\SelectionRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SelectionRepository::class)]
-#[ApiResource(normalizationContext:['groups'=>['selection:read']])]
+// #[ApiResource(normalizationContext:['groups'=>['selection:read']])]
 class Selection
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?int $quantity = null;
 
     #[ORM\Column]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?float $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'selections')]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?Article $article = null;
 
     #[ORM\ManyToOne(inversedBy: 'selections')]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?Service $service = null;
 
     #[ORM\ManyToOne(inversedBy: 'selection')]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?Order $orders = null;
 
     #[ORM\ManyToOne(inversedBy: 'selections')]
-    #[Groups(["selection:read"])]
+    #[Groups(['selection:read'])]
     private ?User $user = null;
-
-
 
     public function getId(): ?int
     {
