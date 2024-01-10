@@ -51,15 +51,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $birthdate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 55, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $zipcode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $city = null;
 
     #[ORM\OneToMany(mappedBy: 'employee', targetEntity: Order::class)]
@@ -69,6 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $selections;
 
     #[ORM\Column(length: 55, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $phone = null;
 
     public function __construct()
