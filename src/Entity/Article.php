@@ -14,30 +14,30 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["articles:read", "categories:read", "services:read"])] // j'inclus la propriété id à mon groupe de sérialisation articles:read
+    #[Groups(['articles:read', 'categories:read', 'services:read', 'selection:read'])] // j'inclus la propriété id à mon groupe de sérialisation articles:read
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["articles:read", "categories:read", "services:read", "selections:read"])]
+    #[Groups(['articles:read', 'categories:read', 'services:read', 'selection:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["articles:read", "services:read"])]
+    #[Groups(['articles:read', 'services:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["articles:read"])]
+    #[Groups(['articles:read'])]
     private ?string $state = null;
 
     #[ORM\Column]
-    #[Groups(["articles:read", "categories:read", "services:read", "selections:read"])]
+    #[Groups(['articles:read', 'categories:read', 'services:read', 'selection:read'])]
     private ?float $price = null;
 
     #[ORM\OneToMany(mappedBy: 'article', targetEntity: Selection::class)]
     private Collection $selections;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[Groups(["articles:read"])]
+    #[Groups(['articles:read'])]
     private ?Category $category = null;
 
     #[ORM\ManyToMany(targetEntity: Service::class, inversedBy: 'articles')]
@@ -137,7 +137,7 @@ class Article
         return $this->category;
     }
 
-    #[Groups(["articles:read"])]
+    #[Groups(['articles:read'])]
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
