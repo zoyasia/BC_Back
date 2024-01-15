@@ -11,11 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class UserController extends AbstractController
 {
-    public function __construct(private UserManager $userManager, private SerializerInterface $serializer, private UserRepository $userRepository)
+    public function __construct(private UserManager $userManager, private SerializerInterface $serializer, private UserRepository $userRepository, private Security $security)
     {}
 
     #[Route('/users', name: 'app_users', methods: ['GET'])]
@@ -40,15 +42,14 @@ class UserController extends AbstractController
         return $this->json(['user' => $user], Response::HTTP_CREATED);
     }
 
-    #[Route('/users/{id}', name: 'app_user', methods: ['GET'])]
-    public function showUser(int $id): JsonResponse
+    #[Route('/api/users/me', name: 'app_user', methods: ['GET'])]
+    public function showUser(): JsonResponse
     {
-        // $user = $this->userManager->getUserById($id);
-        $user = $this->userRepository->findOneBy(['id' => $id]);
+        $user = $this->getUser();
 
-        if (!$user) {
-            // return new JsonResponse($this->serializer->normalize($user, 'json', ['groups' => ['user:read']]));
-            throw new BadRequestHttpException('Message');
+        if (!$user instanceof UserInterface) {
+            // L'utilisateur n'est pas connecté
+            throw new BadRequestHttpException('Aucun utilisateur connecté');
         }
 
         return $this->json($user, 200, [], ['groups' => ['user:read']]);
@@ -76,6 +77,8 @@ class UserController extends AbstractController
         return $this->json(['user' => $user], Response::HTTP_NO_CONTENT);
     }
 
+    // Faire des vérifications côté Controller de ce qui est envoyé par le front.
+    // Passer des entités en paramètre plutôt qu'un id, et si User trouvé, faire appel au service
 
     #[Route('/users/{id}', name: 'app_delete', methods: ['DELETE'])]
     public function deleteUser(int $id): JsonResponse
