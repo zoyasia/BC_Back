@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\UserManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 class UserController extends AbstractController
 {
     public function __construct(private UserManager $userManager, private SerializerInterface $serializer, private UserRepository $userRepository, private Security $security)
-    {}
+    {
+    }
 
     #[Route('/users', name: 'app_users', methods: ['GET'])]
     public function index(): JsonResponse
@@ -55,9 +56,16 @@ class UserController extends AbstractController
         return $this->json($user, 200, [], ['groups' => ['user:read']]);
     }
 
-    #[Route('/users/{id}', name: 'app_update', methods: ['PATCH'])]
-    public function updateUser(User $user, Request $request): JsonResponse
+    #[Route('/api/users/me', name: 'app_update', methods: ['PATCH'])]
+    public function updateUser(Request $request): JsonResponse
     {
+        $user = $this->getUser();
+
+        if (!$user instanceof UserInterface) {
+            // L'utilisateur n'est pas connecté
+            throw new BadRequestHttpException('Aucun utilisateur connecté');
+        }
+
         $data = json_decode($request->getContent(), true);
 
         $user = $this->userManager->update(
@@ -77,14 +85,21 @@ class UserController extends AbstractController
         return $this->json(['user' => $user], Response::HTTP_NO_CONTENT);
     }
 
-    // Faire des vérifications côté Controller de ce qui est envoyé par le front.
-    // Passer des entités en paramètre plutôt qu'un id, et si User trouvé, faire appel au service
-
-    #[Route('/users/{id}', name: 'app_delete', methods: ['DELETE'])]
-    public function deleteUser(int $id): JsonResponse
+    #[Route('/api/users/me', name: 'app_delete', methods: ['DELETE'])]
+    public function deleteUser(EntityManagerInterface $entityManager): JsonResponse
     {
-        $this->userManager->delete($id);
-        return new JsonResponse($id, Response::HTTP_NO_CONTENT);
+        $user = $this->getUser();
+
+        if (!$user instanceof UserInterface) {
+            // L'utilisateur n'est pas connecté
+            throw new BadRequestHttpException('Aucun utilisateur connecté');
+        }
+
+        // Supprimer l'utilisateur
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
 }

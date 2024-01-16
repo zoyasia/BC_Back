@@ -117,17 +117,4 @@ class UserManager
         return $user;
     }
 
-    public function delete($userId): User
-    {
-        $user = $this->userRepository->find($userId);
-
-        if (!$user) {
-            throw new \Doctrine\ORM\EntityNotFoundException('Utilisateur non trouvé');
-        }
-
-        $this->entityManager->remove($user);
-        $this->entityManager->flush();
-
-        return $user;
-    }
 }
