@@ -53,4 +53,23 @@ class CartManager
 
         return $selection;
     }
+
+    /**
+     * Update the quantity of an existing selection
+     *
+     * @param Selection $selection
+     * @param int $newQuantity
+     * @return Selection
+     */
+    public function updateSelectionQuantity(Selection $selection, int $newQuantity): Selection
+    {
+        $selectionPrice = (($selection->getArticle()->getPrice() + $selection->getService()->getPrice()) * $newQuantity);
+
+        $selection->setQuantity($newQuantity);
+        $selection->setPrice($selectionPrice);
+
+        $this->entityManager->flush();
+
+        return $selection;
+    }
 }

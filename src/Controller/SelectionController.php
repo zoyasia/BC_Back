@@ -44,8 +44,8 @@ class SelectionController extends AbstractController
 
     }
 
-    #[Route('/api/selections', name: 'app_selection', methods: ['POST'])] // IsGranted
-    public function addItemToCart(Request $request, UserInterface $user): JsonResponse
+    #[Route('/api/selection', name: 'app_selection_create', methods: ['POST'])] // IsGranted
+    public function create(Request $request, UserInterface $user): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -59,5 +59,21 @@ class SelectionController extends AbstractController
         return $this->json($newSelection, 201, [], ['groups' => ['selection:read']]);
     }
 
+    #[Route('/api/selection/{id}', name: 'app_selection_update', methods: ['PATCH'])]
+    public function updateSelection(Request $request, int $id): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
 
+        // Récupère la sélection existante depuis la base de données
+        $selection = $this->selectionRepository->find($id);
+
+        if (!$selection) {
+            return new JsonResponse(['error' => 'Sélection non trouvée'], 404);
+        }
+
+        // Appelle la méthode du CartManager pour mettre à jour la quantité
+        $this->cartManager->updateSelectionQuantity($selection, $data['quantity']);
+
+        return $this->json($selection, 200, [], ['groups' => ['selection:read']]);
+    }
 }
