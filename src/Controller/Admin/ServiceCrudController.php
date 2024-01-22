@@ -2,9 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\Admin\Trait\AdminOnlyTrait;
 use App\Entity\Service;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -16,7 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ServiceCrudController extends AbstractCrudController
 {
-    // use AdminOnlyTrait;
+    // use SuperAdminOnlyTrait;
     public static function getEntityFqcn(): string
     {
         return Service::class;
@@ -34,7 +35,10 @@ class ServiceCrudController extends AbstractCrudController
             AssociationField::new('articles', 'Articles pris en charge')
                 ->onlyOnIndex(),
             AssociationField::new('articles')
-                ->hideOnIndex(),
+                ->hideOnIndex()
+                ->hideOnDetail(),
+            ArrayField::new('articles')
+                ->onlyOnDetail(),
         ];
     }
 
@@ -56,6 +60,14 @@ class ServiceCrudController extends AbstractCrudController
         }
 
         parent::deleteEntity($em, $entityInstance);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_EDIT, Action::INDEX)
+        ;
     }
 
 }

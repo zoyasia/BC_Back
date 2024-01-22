@@ -2,7 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\Admin\Trait\AdminOnlyTrait;
 use App\Entity\Article;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -11,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
@@ -18,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ArticleCrudController extends AbstractCrudController
 {
-    // use AdminOnlyTrait;
+    // use SuperAdminOnlyTrait;
     public static function getEntityFqcn(): string
     {
         return Article::class;
@@ -36,13 +36,19 @@ class ArticleCrudController extends AbstractCrudController
             AssociationField::new('services', 'Services disponibles')
             ->onlyOnIndex(),
             AssociationField::new('services')
-            ->hideOnIndex(),
-            
+            ->hideOnIndex()
+            ->hideOnDetail(),
+            ArrayField::new('services')
+            ->onlyOnDetail()            
         ];
     }
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->setPageTitle('index', 'Articles');
+        return $crud
+        ->setPageTitle('index', '%entity_label_plural%')
+        ->setEntityLabelInSingular('Article')
+        ->setEntityLabelInPlural('Articles')
+        ;
     }
 
         /**
@@ -65,6 +71,7 @@ class ArticleCrudController extends AbstractCrudController
     {
         return $actions
             ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_EDIT, Action::INDEX)
         ;
     }
     

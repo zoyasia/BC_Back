@@ -2,10 +2,10 @@
 
 namespace App\Controller\Admin;
 
-use App\Controller\Admin\Trait\AdminOnlyTrait;
-use App\Controller\Admin\Trait\ReadOnlyTrait;
 use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -16,7 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CategoryCrudController extends AbstractCrudController
 {
-    // use AdminOnlyTrait;
+    // use SuperAdminOnlyTrait;
     public static function getEntityFqcn(): string
     {
         return Category::class;
@@ -33,12 +33,18 @@ class CategoryCrudController extends AbstractCrudController
             ->onlyOnIndex(),
             ArrayField::new('articles')
             ->onlyOnDetail(),
+            AssociationField::new('articles')
+            ->hideOnIndex()
+            ->hideOnDetail(),
         ];
     }
 
     public function configureCrud(Crud $crud): Crud
     {
-        return $crud->setPageTitle('index', 'Catégories');
+        return $crud
+        ->setPageTitle('index', '%entity_label_plural%')
+        ->setEntityLabelInSingular('Catégorie')
+        ->setEntityLabelInPlural('Catégories');
     }
 
     /**
@@ -53,6 +59,14 @@ class CategoryCrudController extends AbstractCrudController
         }
 
         parent::deleteEntity($em, $entityInstance);
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->add(Crud::PAGE_EDIT, Action::INDEX)
+        ;
     }
     
 }

@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
         $adminUser = new User();
         $adminUser
         ->setEmail('rh@frimousse.com')
-        ->setRoles(['ROLE_ADMIN'])
+        ->setRoles(['ROLE_SUPER_ADMIN'])
         ->setPassword($this->hasher->hashPassword($adminUser, 'adminFrimousse23'))
         ->setFirstname('Laetitia')
         ->setLastname('Guillo');
@@ -50,7 +50,7 @@ class AppFixtures extends Fixture
             ->setPassword($this->hasher->hashPassword($employeeUser, 'testEmp23'))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
-            ->setRoles(['ROLE_EMPLOYEE'])
+            ->setRoles(['ROLE_ADMIN'])
             ->setBirthdate($birthdate->format('Y-m-d'));
             
             $manager->persist($employeeUser);
