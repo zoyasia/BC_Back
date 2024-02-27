@@ -47,16 +47,21 @@ class SelectionController extends AbstractController
     #[Route('/api/selection', name: 'app_selection_create', methods: ['POST'])] // IsGranted
     public function create(Request $request, UserInterface $user): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        try {
+            $data = json_decode($request->getContent(), true);
 
-        $article = $this->articleRepository->findOneBy(['id' => $data['article']]);
-        $quantity = $data['quantity'];
+            $article = $this->articleRepository->findOneBy(['id' => $data['article_id']]);
+            $quantity = $data['quantity'];
+    
+            $service = $this->serviceRepository->findOneBy(['id' => $data['service_id']]);
+    
+            $newSelection = $this->cartManager->createNewSelection($article, $quantity, $user, $service);
+    
+            return $this->json($newSelection, 201, [], ['groups' => ['selection:read']]);
+        }  catch (\Exception $e) {
+            return $this->json(['error' => $e->getMessage()], 500);
+        }
 
-        $service = $this->serviceRepository->findOneBy(['id' => $data['service']]);
-
-        $newSelection = $this->cartManager->createNewSelection($article, $quantity, $user, $service);
-
-        return $this->json($newSelection, 201, [], ['groups' => ['selection:read']]);
     }
 
     #[Route('/api/selection/{id}', name: 'app_selection_update', methods: ['PATCH'])]
