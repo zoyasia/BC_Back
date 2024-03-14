@@ -3,6 +3,7 @@ namespace App\EventListener;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use App\Entity\User;
+use Psr\Log\LoggerInterface;
 
 class JWTCreatedListener
 {
@@ -19,7 +20,6 @@ class JWTCreatedListener
     {
         $payload = $event->getData();
         $payload['id'] = $this->userId;
-
         $event->setData($payload);
     }
 }

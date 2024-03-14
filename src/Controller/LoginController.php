@@ -21,7 +21,7 @@ class LoginController extends AbstractController
         $this->security = $security;
     }
 
-
+}
     // #[Route('/login', name: 'login')]
     // public function login(AuthenticationUtils $authenticationUtils): Response
     // {
@@ -60,7 +60,7 @@ class LoginController extends AbstractController
     //     ]);
     // }
 
-}
+//}
 
 // class LoginController extends AbstractController
 // {

@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,13 +16,17 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class ApiLoginAuthenticator extends AbstractAuthenticator
 {
-
     private const TOKEN_NAME = 'X-API-TOKEN';
+/**
+ * vérifie la présence d'un jeton dans les en-têtes.
+ */
     public function supports(Request $request): ?bool
     {
         return $request->headers->has(self::TOKEN_NAME);
     }
-
+/**
+ * authentifie l'utilisateur en utilisant le jeton API de l'en-têtes
+ */
     public function authenticate(Request $request): Passport
     {
 
@@ -41,7 +46,6 @@ class ApiLoginAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // TODO: Implement onAuthenticationFailure() method.
     }
 
     //    public function start(Request $request, AuthenticationException $authException = null): Response

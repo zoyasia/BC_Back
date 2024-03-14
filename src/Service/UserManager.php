@@ -27,7 +27,10 @@ class UserManager
         $this->userFactory = $userFactory;
         $this->passwordHasher = $passwordHasher;
     }
-
+    /**
+     * Récupère tous les utilisateurs.
+     * @return array
+     */
     public function getAll(): array
     {
         $users = $this->userRepository->findAll();
@@ -40,12 +43,24 @@ class UserManager
         return $usersArray;
     }
 
+    /**
+     * Récupère un utilisateur par son ID.
+     * @param int $userId
+     * @return User
+     */
     public function getUserById(int $userId): User
     {
         $user = $this->userRepository->findOneBy(['id' => $userId]);
         return $user;
     }
-
+    /**
+     * Crée un nouvel utilisateur.
+     * @param string $firstname
+     * @param string $lastname
+     * @param string $email
+     * @param string $password
+     * @return User
+     */
     public function create(string $firstname, string $lastname, string $email, string $password): User
     {
 
@@ -57,6 +72,21 @@ class UserManager
         return $user;
     }
 
+    /**
+     * Met à jour un utilisateur.
+     * @param User $user
+     * @param string|null $firstname
+     * @param string|null $lastname
+     * @param string|null $email
+     * @param string|null $gender
+     * @param string|null $birthdate
+     * @param string|null $phone
+     * @param string|null $address
+     * @param string|null $zipcode
+     * @param string|null $city
+     * @param string|null $newPassword
+     * @return User
+     */
     public function update(
         User $user,
         ?string $firstname,
